@@ -8,13 +8,11 @@
                     <div class="me-auto">
                         <h4 class="page-title">Doctor List</h4>
                     </div>
-
                 </div>
             </div>
 
             <!-- Main content -->
             <section class="content">
-
                 <div class="row">
                     <div class="col-12">
                         <div class="box">
@@ -22,7 +20,7 @@
                                 <h4 class="box-title">Doctors</h4>
                                 <div class="box-controls pull-right">
                                     <div class="lookup lookup-circle lookup-right">
-                                        <input type="text" name="s">
+                                        <input type="text" name="s" placeholder="Search...">
                                     </div>
                                 </div>
                             </div>
@@ -40,81 +38,35 @@
                                             <th>Added Date</th>
                                             <th>Action</th>
                                         </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Dr Reena Jain</td>
-                                            <td>Schone Clinic 3</td>
-                                            <td>Cosmetologist</td>
-                                            <td>9123456789</td>
-                                            <td>info@shoneclinic.com</td>
-                                            <td>27-06-2024</td>
-                                            <td><a href="#"> <button class="btn btn-primary-light">View</button> </a>
-                                            </td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td><a href="#"> <button class="btn btn-danger-light">Delete</button> </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Dr Reena Jain</td>
-                                            <td>Schone Clinic 2</td>
-                                            <td>Cosmetologist</td>
-                                            <td>9123456789</td>
-                                            <td>info@shoneclinic.com</td>
-                                            <td>27-06-2024</td>
-                                            <td><a href="#"> <button class="btn btn-primary-light">View</button> </a>
-                                            </td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td><a href="#"> <button class="btn btn-danger-light">Delete</button> </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Dr Reena Jain</td>
-                                            <td>Schone Clinic 3</td>
-                                            <td>Cosmetologist</td>
-                                            <td>9123456789</td>
-                                            <td>info@shoneclinic.com</td>
-                                            <td>27-06-2024</td>
-                                            <td><a href="#"> <button class="btn btn-primary-light">View</button> </a>
-                                            </td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td><a href="#"> <button class="btn btn-danger-light">Delete</button> </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Dr Reena Jain</td>
-                                            <td>Schone Clinic 5</td>
-                                            <td>Cosmetologist</td>
-                                            <td>9123456789</td>
-                                            <td>info@shoneclinic.com</td>
-                                            <td>27-06-2024</td>
-                                            <td><a href="#"> <button class="btn btn-primary-light">View</button> </a>
-                                            </td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td><a href="#"> <button class="btn btn-danger-light">Delete</button> </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Dr Reena Jain</td>
-                                            <td>Schone Clinic 1</td>
-                                            <td>Cosmetologist</td>
-                                            <td>9123456789</td>
-                                            <td>info@shoneclinic.com</td>
-                                            <td>27-06-2024</td>
-                                            <td><a href="#"> <button class="btn btn-primary-light">View</button> </a>
-                                            </td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td><a href="#"> <button class="btn btn-danger-light">Delete</button> </a>
-                                            </td>
-                                        </tr>
+                                        @foreach ($doctors as $index => $doctor)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $doctor->name }}</td>
+                                                <td>{{ $doctor->branch->name ?? 'N/A' }}</td>
+                                                <td>{{ $doctor->specialization->name ?? 'N/A' }}</td>
+                                                <td>{{ $doctor->contact }}</td>
+                                                <td>{{ $doctor->email }}</td>
+                                                <td>{{ $doctor->created_at->format('d-m-Y') }}</td>
+                                                {{-- <td>
+                                                    <a href="{{ route('clinicadmin.doctors.show', $doctor->id) }}">
+                                                        <button class="btn btn-primary-light">View</button>
+                                                    </a>
+                                                </td> --}}
+                                                <td>
+                                                    <a href="{{ route('clinicadmin.doctors.edit', $doctor->id) }}">
+                                                        <button type="button" class="btn btn-primary">Edit</button>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <form action="{{ route('clinicadmin.doctors.destroy', $doctor->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger-light">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </table>
                                 </div>
                             </div>
@@ -123,7 +75,7 @@
                         <!-- /.box -->
                     </div>
                     <!-- /.row -->
-
+                </div>
             </section>
             <!-- /.content -->
         </div>

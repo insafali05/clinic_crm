@@ -32,7 +32,7 @@ class LoginController extends Controller
             // Authentication was successful
             $user = Auth::user();
 
-            // Redirect based on roles
+            // // Redirect based on roles
             if ($user->hasRole('superadmin')) {
                 return redirect()->route('superadmin.dashboard');
             } elseif ($user->hasRole('clinicadmin')) {

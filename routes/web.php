@@ -25,12 +25,12 @@ use App\Http\Controllers\Frontend\Clinicadmin\Add_staffController;
 use App\Http\Controllers\Frontend\Clinicadmin\Branch_detailsController;
 use App\Http\Controllers\Frontend\Clinicadmin\ClinicIndexController;
 use App\Http\Controllers\Frontend\Clinicadmin\Doctor_listController;
-use App\Http\Controllers\Frontend\Clinicadmin\Doctor_masterController;
-use App\Http\Controllers\Frontend\Clinicadmin\Infrastructure_masterController;
+use App\Http\Controllers\Frontend\Clinicadmin\SpecializationController;
+use App\Http\Controllers\Frontend\Clinicadmin\InfrastructureMasterController;
 use App\Http\Controllers\Frontend\Clinicadmin\Lab_masterController;
 use App\Http\Controllers\Frontend\Clinicadmin\Lead_detailsController;
 use App\Http\Controllers\Frontend\Clinicadmin\Leads_listController;
-use App\Http\Controllers\Frontend\Clinicadmin\Medicine_masterController;
+use App\Http\Controllers\Frontend\Clinicadmin\MedicineMasterController;
 use App\Http\Controllers\Frontend\Clinicadmin\Staff_detailsController;
 use App\Http\Controllers\Frontend\Clinicadmin\Staff_masterController;
 use App\Http\Controllers\Frontend\Clinicadmin\Staffs_listController;
@@ -92,14 +92,71 @@ Route::get('register', [RegisterController::class, 'showRegistrationForm'])->nam
 Route::post('register', [RegisterController::class, 'register']);
 
 
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login']);
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+
+
+
 Route::middleware(['role:superadmin'])->group(function () {
-    Route::get('/superadmin-dashboard', function () {
-        return view('superadmin.dashboard');
-    });
+    Route::get('superadmin/index', [IndexController::class, 'index']);
 });
 
 Route::middleware('auth:clinicadmin')->group(function () {
     Route::get('clinicadmin/index', [ClinicIndexController::class, 'index'])->name('clinicadmin.index');
+
+
+    Route::get('clinicadmin/add_branches', [Add_branchesController::class, 'index'])->name('clinicadmin.add_branches.index');
+    Route::post('clinicadmin/add_branches', [Add_branchesController::class, 'store'])->name('clinicadmin.add_branches.store');
+    Route::get('clinicadmin/add_branches/{id}/edit', [Add_branchesController::class, 'edit'])->name('clinicadmin.add_branches.edit');
+    Route::put('clinicadmin/add_branches/{id}', [Add_branchesController::class, 'update'])->name('clinicadmin.add_branches.update');
+    Route::delete('clinicadmin/add_branches/{id}', [Add_branchesController::class, 'destroy'])->name('clinicadmin.add_branches.destroy');
+
+    Route::get('clinicadmin/doctor_master', [SpecializationController::class, 'create'])->name('specializations.create');
+    Route::post('clinicadmin/doctor_master', [SpecializationController::class, 'store'])->name('specializations.store');
+    Route::put('clinicadmin/doctor_master/{id}', [SpecializationController::class, 'update'])->name('specializations.update');
+    Route::delete('clinicadmin/doctor_master/{id}', [SpecializationController::class, 'destroy'])->name('specializations.destroy');
+
+    Route::get('clinicadmin/staff_master', [Staff_masterController::class, 'index'])->name('clinicadmin.staff_master.index');
+    Route::post('clinicadmin/staff_master', [Staff_masterController::class, 'store'])->name('clinicadmin.staff_master.store');
+    Route::put('clinicadmin/staff_master/{id}', [Staff_masterController::class, 'update'])->name('clinicadmin.staff_master.update');
+    Route::delete('clinicadmin/staff_master/{id}', [Staff_masterController::class, 'destroy'])->name('clinicadmin.staff_master.destroy');
+
+    Route::get('clinicadmin/lab_master', [Lab_masterController::class, 'index'])->name('lab_master.index');
+    Route::post('clinicadmin/lab_master/store', [Lab_masterController::class, 'store'])->name('lab_master.store');
+    Route::post('clinicadmin/lab_master/update/{id}', [Lab_masterController::class, 'update'])->name('lab_master.update');
+    Route::delete('clinicadmin/lab_master/delete/{id}', [Lab_masterController::class, 'destroy'])->name('lab_master.destroy');
+
+    Route::get('clinicadmin/treatment_master', [Treatment_masterController::class, 'index'])->name('treatment_master.index');
+    Route::post('clinicadmin/treatment_master/store', [Treatment_masterController::class, 'store'])->name('treatment_master.store');
+    Route::post('clinicadmin/treatment_master/update/{id}', [Treatment_masterController::class, 'update'])->name('treatment_master.update');
+    Route::delete('clinicadmin/treatment_master/delete/{id}', [Treatment_masterController::class, 'destroy'])->name('treatment_master.destroy');
+
+    Route::get('clinicadmin/medicine_master', [MedicineMasterController::class, 'index']);
+    Route::post('clinicadmin/medicine_master', [MedicineMasterController::class, 'store']);
+    Route::put('clinicadmin/medicine_master/{id}', [MedicineMasterController::class, 'update']);
+    Route::delete('clinicadmin/medicine_master/{id}', [MedicineMasterController::class, 'destroy']);
+
+    Route::get('clinicadmin/infrastructure_master', [InfrastructureMasterController::class, 'index'])->name('clinicadmin.infrastructure_master.index');
+    Route::post('clinicadmin/infrastructure_master/store', [InfrastructureMasterController::class, 'store'])->name('clinicadmin.infrastructure_master.store');
+    Route::post('clinicadmin/infrastructure_master/update/{id}', [InfrastructureMasterController::class, 'update'])->name('clinicadmin.infrastructure_master.update');
+    Route::delete('clinicadmin/infrastructure_master/destroy/{id}', [InfrastructureMasterController::class, 'destroy'])->name('clinicadmin.infrastructure_master.destroy');
+
+    Route::get('clinicadmin/add_doctor', [Add_doctorController::class, 'index'])->name('clinicadmin.add_doctor.index');
+    Route::post('clinicadmin/add_doctor', [Add_doctorController::class, 'store'])->name('clinicadmin.add_doctor.store');
+    Route::get('clinicadmin/doctors_list', [Doctor_listController::class, 'index']);
+
+
+
+    Route::get('clinicadmin/add_staff', [Add_staffController::class, 'index']);
+    Route::post('clinicadmin/add_staff', [Add_staffController::class, 'store'])->name('clinicadmin.add_staff.store');
+
+    Route::get('clinicadmin/add_leads', [Add_leadsController::class, 'index']);
+    Route::get('clinicadmin/branch_details', [Branch_detailsController::class, 'index']);
+    Route::get('clinicadmin/lead_details', [Lead_detailsController::class, 'index']);
+    Route::get('clinicadmin/leads_list', [Leads_listController::class, 'index']);
+    Route::get('clinicadmin/staff_details', [Staff_detailsController::class, 'index']);
+    Route::get('clinicadmin/staffs_list', [Staffs_listController::class, 'index']);
 });
 
 // Add routes for other roles similarly...
@@ -110,9 +167,6 @@ Route::post('clinicadmin/logout', [ClinicAdminAuthController::class, 'logout'])-
 
 
 
-Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('login', [LoginController::class, 'login']);
-Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 
 
@@ -139,28 +193,12 @@ Route::get('superadmin/invoice', [InvoiceController::class, 'index']);
 Route::get('superadmin/payments', [PaymentsController::class, 'index']);
 Route::get('superadmin/renew_license', [Renew_LicenseController::class, 'index']);
 
-Route::get('superadmin/create_clinic_admin', [ClinicAdminController::class, 'create'])->name('clinic-admin.create');
-Route::post('superadmin/store_clinic_admin', [ClinicAdminController::class, 'store'])->name('clinic-admin.store');
+Route::get('clinicadmin/doctor_master', [SpecializationController::class, 'create'])->name('specializations.create');
+Route::post('clinicadmin/doctor_master', [SpecializationController::class, 'store'])->name('specializations.store');
 
 
 
 
-Route::get('clinicadmin/add_branches', [Add_branchesController::class, 'index']);
-Route::get('clinicadmin/add_doctor', [Add_doctorController::class, 'index']);
-Route::get('clinicadmin/add_leads', [Add_leadsController::class, 'index']);
-Route::get('clinicadmin/add_staff', [Add_staffController::class, 'index']);
-Route::get('clinicadmin/branch_details', [Branch_detailsController::class, 'index']);
-Route::get('clinicadmin/doctors_list', [Doctor_listController::class, 'index']);
-Route::get('clinicadmin/doctor_master', [Doctor_masterController::class, 'index']);
-Route::get('clinicadmin/infrastructure_master', [Infrastructure_masterController::class, 'index']);
-Route::get('clinicadmin/lab_master', [Lab_masterController::class, 'index']);
-Route::get('clinicadmin/lead_details', [Lead_detailsController::class, 'index']);
-Route::get('clinicadmin/leads_list', [Leads_listController::class, 'index']);
-Route::get('clinicadmin/medicine_master', [Medicine_masterController::class, 'index']);
-Route::get('clinicadmin/staff_details', [Staff_detailsController::class, 'index']);
-Route::get('clinicadmin/staff_master', [Staff_masterController::class, 'index']);
-Route::get('clinicadmin/staffs_list', [Staffs_listController::class, 'index']);
-Route::get('clinicadmin/treatment_master', [Treatment_masterController::class, 'index']);
 
 
 
@@ -220,3 +258,9 @@ Route::get('treatment/patients', [Treatment_patientsController::class, 'index'])
 
 
 Route::get('home', [HomeController::class, 'index'])->name('home');
+
+
+Route::middleware('auth:clinicadmin')->group(function () {
+
+    Route::get('clinicadmin/add_branches', [Add_branchesController::class, 'index']);
+});

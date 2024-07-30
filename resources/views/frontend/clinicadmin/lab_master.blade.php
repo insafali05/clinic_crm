@@ -1,37 +1,26 @@
 @extends('frontend.clinicadmin.layouts.main')
+
 @section('main-container')
     <div class="content-wrapper">
         <div class="container-full">
-            <!-- Content Header (Page header) -->
-            <!-- <div class="content-header">
-                        <div class="d-flex align-items-center">
-                            <div class="me-auto">
-                                <h4 class="page-title">Add Staff</h4>
-
-                            </div>
-
-                        </div>
-                    </div> -->
-
             <!-- Main content -->
             <section class="content">
                 <div class="row">
                     <div class="col-12">
                         <div class="box">
-
                             <!-- /.box-header -->
-                            <form class="form">
+                            <form action="{{ route('lab_master.store') }}" method="POST">
+                                @csrf
                                 <div class="box-body">
-
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="form-label">Lab Type</label>
-                                                <input type="text" class="form-control" placeholder="Lab type">
+                                                <input type="text" name="type" class="form-control"
+                                                    placeholder="Lab type" required>
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                                 <!-- /.box-body -->
                                 <div class="box-footer">
@@ -69,46 +58,59 @@
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Pathology</td>
-                                            <td>27-06-2024</td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td> <button type="button" class="btn btn-danger">Delete</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Radiology</td>
-                                            <td>27-06-2024</td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td> <button type="button" class="btn btn-danger">Delete</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Pathology</td>
-                                            <td>27-06-2024</td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td> <button type="button" class="btn btn-danger">Delete</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Pathology</td>
-                                            <td>27-06-2024</td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td> <button type="button" class="btn btn-danger">Delete</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><a href="#">#01</a></td>
-                                            <td>Pathology</td>
-                                            <td>27-06-2024</td>
-                                            <td> <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModal">Edit</button></td>
-                                            <td> <button type="button" class="btn btn-danger">Delete</button></td>
-                                        </tr>
+                                        @foreach ($labTypes as $index => $labType)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $labType->type }}</td>
+                                                <td>{{ $labType->created_at->format('d-m-Y') }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                        data-bs-target="#editModal{{ $labType->id }}">Edit</button>
+                                                </td>
+                                                <td>
+                                                    <form action="{{ route('lab_master.destroy', $labType->id) }}"
+                                                        method="POST" onsubmit="return confirm('Are you sure?');">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Edit Modal -->
+                                            <div class="modal fade" id="editModal{{ $labType->id }}" tabindex="-1"
+                                                aria-labelledby="editModalLabel{{ $labType->id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="editModalLabel{{ $labType->id }}">
+                                                                Edit Lab Type</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form action="{{ route('lab_master.update', $labType->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('POST')
+                                                                <div class="form-group">
+                                                                    <label class="form-label">Lab Type</label>
+                                                                    <input type="text" name="type"
+                                                                        class="form-control" value="{{ $labType->type }}"
+                                                                        required>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary">Save
+                                                                        changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </table>
                                 </div>
                             </div>

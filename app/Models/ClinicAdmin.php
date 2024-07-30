@@ -19,4 +19,12 @@ class ClinicAdmin extends Authenticatable
     protected $hidden = [
         'password',
     ];
+    public function specializations()
+    {
+        return $this->hasMany(Specialization::class);
+    }
+    public function staffs()
+    {
+        return $this->hasMany(Staff::class);
+    }
 }
